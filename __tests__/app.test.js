@@ -15,19 +15,28 @@ describe('top secret routes', () => {
     return setup(pool);
   });
 
-  afterAll(() => {
-    pool.end();
-  });
-
-  test('should create a new user', async () => {
+  test('POST /api/v1/users creates a new user', async () => {
     const resp = await request(app).post('/api/v1/users').send(mockUser);
     const { firstName, lastName, email } = mockUser;
 
+    expect(resp.status).toBe(200);
     expect(resp.body).toEqual({
       id: expect.any(String),
       firstName,
       lastName,
       email,
     });
+  });
+
+  test('POST /api/v1/users/sessions signs in an existing user', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
+    const resp = await request(app)
+      .post('/api/v1/users/sessions')
+      .send({ email: 'mock@example.com', password: '123123' });
+    expect(resp.status).toBe(200);
+  });
+
+  afterAll(() => {
+    pool.end();
   });
 });
