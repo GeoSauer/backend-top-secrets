@@ -60,8 +60,18 @@ describe('users routes', () => {
       .post('/api/v1/users/sessions')
       .send({ email: 'mock@example.com', password: '123123' });
 
+    await agent.post('/api/v1/secrets').send(mockSecret);
+
     const resp = await agent.get('/api/v1/secrets');
     expect(resp.status).toBe(200);
+    expect(resp.body).toEqual([
+      {
+        id: '1',
+        title: 'mockTitle',
+        description: 'mockDescription',
+        createdAt: expect.any(String),
+      },
+    ]);
   });
 
   test('POST /api/v1/secrets should allow authenticated users to create a new secret', async () => {
