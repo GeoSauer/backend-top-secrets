@@ -10,10 +10,10 @@ const mockUser = {
   email: 'mock@example.com',
   password: '123123',
 };
-// const mockSecret = {
-//   title: 'mockTitle',
-//   description: 'mockDescription',
-// };
+const mockSecret = {
+  title: 'mockTitle',
+  description: 'mockDescription',
+};
 
 describe('users routes', () => {
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe('users routes', () => {
 
   test('DELETE /api/v1/users/sessions should log out user', async () => {
     const agent = request.agent(app);
-    // const user = await UserService.create({ ...mockUser });
+    await UserService.create({ ...mockUser });
     await agent
       .post('/api/v1/users/sessions')
       .send({ email: 'mock@example.com', password: '123123' });
@@ -54,13 +54,32 @@ describe('users routes', () => {
 
   test('GET /api/v1/secrets should allow authenticated users to view a list of secrets', async () => {
     const agent = request.agent(app);
-    const user = await UserService.create({ ...mockUser });
+    await UserService.create({ ...mockUser });
 
     await agent
       .post('/api/v1/users/sessions')
       .send({ email: 'mock@example.com', password: '123123' });
+
     const resp = await agent.get('/api/v1/secrets');
     expect(resp.status).toBe(200);
+  });
+
+  test('POST /api/v1/secrets should allow authenticated users to create a new secret', async () => {
+    const agent = request.agent(app);
+    await UserService.create({ ...mockUser });
+
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'mock@example.com', password: '123123' });
+
+    const resp = await agent.post('/api/v1/secrets').send(mockSecret);
+    const { title, description } = mockSecret;
+    expect(resp.body).toEqual({
+      id: expect.any(String),
+      title,
+      description,
+      createdAt: expect.any(String),
+    });
   });
 
   afterAll(() => {
