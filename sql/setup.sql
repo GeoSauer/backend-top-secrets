@@ -15,5 +15,15 @@ CREATE TABLE secrets (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO secrets (
+    title,
+    description
+)
+VALUES
+('big news', 'lol actually is smol news, gottem'),
+('smol news', 'aliens are real! heh'),
+('medium news', 'learn how to speak to the dead with one simple trick!')
+;

@@ -10,8 +10,12 @@ const mockUser = {
   email: 'mock@example.com',
   password: '123123',
 };
+// const mockSecret = {
+//   title: 'mockTitle',
+//   description: 'mockDescription',
+// };
 
-describe('top secret routes', () => {
+describe('users routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
@@ -39,13 +43,24 @@ describe('top secret routes', () => {
 
   test('DELETE /api/v1/users/sessions should log out user', async () => {
     const agent = request.agent(app);
-    const user = await UserService.create({ ...mockUser });
+    // const user = await UserService.create({ ...mockUser });
     await agent
       .post('/api/v1/users/sessions')
       .send({ email: 'mock@example.com', password: '123123' });
 
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
+  });
+
+  test('GET /api/v1/secrets should allow authenticated users to view a list of secrets', async () => {
+    const agent = request.agent(app);
+    const user = await UserService.create({ ...mockUser });
+
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'mock@example.com', password: '123123' });
+    const resp = await agent.get('/api/v1/secrets');
+    expect(resp.status).toBe(200);
   });
 
   afterAll(() => {
