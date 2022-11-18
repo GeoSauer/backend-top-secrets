@@ -7,7 +7,7 @@ const { UserService } = require('../lib/services/UserService.js');
 const mockUser = {
   firstName: 'Mock',
   lastName: 'User',
-  email: 'mock@example.com',
+  email: 'mock@defense.gov',
   password: '123123',
 };
 const mockSecret = {
@@ -37,7 +37,7 @@ describe('users routes', () => {
     await request(app).post('/api/v1/users').send(mockUser);
     const resp = await request(app)
       .post('/api/v1/users/sessions')
-      .send({ email: 'mock@example.com', password: '123123' });
+      .send({ email: 'mock@defense.gov', password: '123123' });
     expect(resp.status).toBe(200);
   });
 
@@ -46,7 +46,7 @@ describe('users routes', () => {
     await UserService.create({ ...mockUser });
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'mock@example.com', password: '123123' });
+      .send({ email: 'mock@defense.gov', password: '123123' });
 
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
@@ -58,11 +58,11 @@ describe('users routes', () => {
 
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'mock@example.com', password: '123123' });
+      .send({ email: 'mock@defense.gov', password: '123123' });
 
     await agent.post('/api/v1/secrets').send(mockSecret);
-
     const resp = await agent.get('/api/v1/secrets');
+
     expect(resp.status).toBe(200);
     expect(resp.body).toEqual([
       {
@@ -80,7 +80,7 @@ describe('users routes', () => {
 
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'mock@example.com', password: '123123' });
+      .send({ email: 'mock@defense.gov', password: '123123' });
 
     const resp = await agent.post('/api/v1/secrets').send(mockSecret);
     const { title, description } = mockSecret;
