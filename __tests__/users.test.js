@@ -50,6 +50,8 @@ describe('users routes', () => {
 
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
+    const testResp = await agent.get('/api/v1/secrets');
+    expect(testResp.status).toBe(401);
   });
 
   test('GET /api/v1/secrets should allow authenticated users to view a list of secrets', async () => {
